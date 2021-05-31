@@ -1,3 +1,22 @@
 from django.db import models
-
-# Create your models here.
+from djmoney.models.fields import MoneyField
+class EightPillarData(models.Model):
+    market_cap = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    Eps = models.IntegerField()
+    Pe = models.IntegerField()
+    is_pe_acceptable = models.BooleanField()
+    profit_margin = models.DecimalField(max_digits=5, decimal_places=2)
+    is_profit_margin_acceptable = models.BooleanField()
+    latest_revenue = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    is_revenue_growing = models.BooleanField()
+    latest_net_income = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    is_net_income_growing = models.BooleanField()
+    latest_shares_outstanding = models.IntegerField()
+    shares_outstanding = models.IntegerField()
+    are_shares_outstanding_shrinking = models.BooleanField()
+    is_quick_ratio_positive = models.BooleanField()
+    is_cash_flow_growing = models.BooleanField()
+    average_cash_flow = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    is_dividend_yield_affordable = models.BooleanField()
+    cash_flow_value = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    is_market_price_worth = models.BooleanField()
