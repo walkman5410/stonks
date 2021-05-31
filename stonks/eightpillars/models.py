@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 from djmoney.models.fields import MoneyField
 class EightPillarData(models.Model):
+    ticker = models.CharField(max_length=10)
     market_cap = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
     Eps = models.IntegerField()
     Pe = models.IntegerField()
@@ -20,3 +22,4 @@ class EightPillarData(models.Model):
     is_dividend_yield_affordable = models.BooleanField()
     cash_flow_value = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
     is_market_price_worth = models.BooleanField()
+    last_updated = models.DateTimeField(auto_now=True, null=False)
