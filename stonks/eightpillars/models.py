@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from djmoney.models.fields import MoneyField
 class EightPillarData(models.Model):
     ticker = models.CharField(max_length=10, null=False)

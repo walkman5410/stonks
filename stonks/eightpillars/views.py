@@ -12,6 +12,8 @@ from collections import defaultdict
 
 from .forms import TickerForm
 
+from .models import EightPillarData
+
 import yfinance as yf
 import yahoo_fin.stock_info as si
 import pandas as pd
@@ -23,6 +25,31 @@ class HomePage(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context['tickerform'] = TickerForm()
         return context
+def view_all_eight_pillar_winner_data(request):
+    data ={}
+    try:
+        data['eightpillardata'] = EightPillarData.objects.filter(
+            is_pe_acceptable = True,
+            is_profit_margin_acceptable = True,
+            is_revenue_growing = True,
+            is_net_income_growing = True,
+            are_shares_outstanding_shrinking = True,
+            is_quick_ratio_positive = True,
+            is_cash_flow_growing = True,
+            is_dividend_yield_affordable = True,
+            is_market_price_worth = True
+        )
+    except:
+        data['message'] = 'There was an error'
+    return render(request, 'eightpillars/includes/all8pillartable.html', data)
+
+def view_all_eight_pillar_data(request):
+    data ={}
+    try:
+        data['eightpillardata'] = EightPillarData.objects.all()
+    except:
+        data['message'] = 'There was an error'
+    return render(request, 'eightpillars/includes/all8pillartable.html', data)
 
 def get_the_pillars(request):
     data = {}
