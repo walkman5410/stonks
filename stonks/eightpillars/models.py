@@ -22,3 +22,12 @@ class EightPillarData(models.Model):
     cash_flow_value = MoneyField(max_digits=14, decimal_places=2, default_currency='USD', null=True)
     is_market_price_worth = models.BooleanField(null=True)
     last_updated = models.DateTimeField(auto_now=True, null=False)
+    
+    def __str__(self):
+        return self.company_name
+class failedTickers(models.Model):
+    ticker = models.CharField(max_length=10, null=False)
+    errorDesc = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.ticker
