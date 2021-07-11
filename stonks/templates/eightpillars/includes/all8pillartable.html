@@ -5,18 +5,47 @@
 {% block content %}
 <div id="mainview">
     {% if eightpillardata %}
-        <div>
-            <input type="checkbox" id="peck" /> PE 
-            <input type="checkbox" id="pmck" /> PROFIT MARGIN
-            <input type="checkbox" id="revck" /> REVENUE GROWTH
-            <input type="checkbox" id="prock" /> PROFIT GROWTH
-            <input type="checkbox" id="shck" /> SHARES OUTSTANDING
-            <input type="checkbox" id="quck" /> QUICK RATIO
-            <input type="checkbox" id="fcfck" /> FREE CASH FLOW
-            <input type="checkbox" id="afcfck" /> AFCFV VS MARKET CAP
+        <div style="left:0; position:absolute;">
+            <fieldset><legend>FILTER</legend>
+            <p><label for="peck"><input type="checkbox" id="peck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">PE</span></label> </p>
+            <p><label for="pmck"><input type="checkbox" id="pmck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">PROFIT MARGIN</span></label> </p>
+            <p><label for="revck"><input type="checkbox" id="revck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">REVENUE GROWTH</span></label> </p>
+            <p><label for="prock"><input type="checkbox" id="prock" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">PROFIT GROWTH</span></label> </p>
+            <p><label for="shck"><input type="checkbox" id="shck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">SHARES OUTSTANDING</span></label> </p>
+            <p><label for="quck"><input type="checkbox" id="quck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">QUICK RATIO</span></label> </p>
+            <p><label for="fcfck"><input type="checkbox" id="fcfck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">FREE CASH FLOW</span></label> </p>
+            <p><label for="afcfck"><input type="checkbox" id="afcfck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">AFCFV VS MARKET CAP</span></label>
+            </fieldset>
         </div>
         {% for obj in eightpillardata %}
-            <table style="border: 2px solid black;" class="eightpillartbl">
+            <table style="border: 2px solid black;" 
+                class="
+                    {% if obj.is_pe_acceptable %}
+                    peck 
+                    {% endif %}
+                    {% if obj.are_shares_outstanding_shrinking %}
+                    shck 
+                    {% endif %}
+                    {% if obj.is_profit_margin_acceptable %}
+                    pmck 
+                    {% endif %}
+                    {% if obj.is_quick_ratio_positive %}
+                    quck 
+                    {% endif %}
+                    {% if obj.is_revenue_growing %}
+                    revck 
+                    {% endif %}
+                    {% if obj.is_cash_flow_growing %}
+                    fcfck 
+                    {% endif %}
+                    {% if obj.is_net_income_growing %}
+                    prock 
+                    {% endif %}
+                    {% if obj.is_market_price_worth %}
+                    afcfck 
+                    {% endif %}
+                "
+            >
                 <tr>
                     <th colspan=6>Company: {{obj.company_name}} ({{obj.ticker}}) <i style="font-size: 10px;">last updated: {{obj.last_updated}}</i></th>
                 </tr>
@@ -63,33 +92,35 @@
             var checkboxes = document.querySelectorAll("input[type=checkbox]");
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        //check which ones are checked
-                        idsChecked = new Array();
-                        idsChecked = checkwhicharechecked();
-                        console.log(idsChecked);
-                        //hide all tables not checked with id's checked
-                        var tables = document.querySelectorAll('table[class=eightpillartbl]');
-                        tables.forEach(function(table) {
-                            
-                        })
+                    if (checkifallunchecked()){
+                        //if none are checked unhide all
+                        document.querySelectorAll('table').forEach(function(tbls){
+                            tbls.style.display = 'block';
+                        });                    
                     } else {
-                        if (checkifallunchecked()){
-                            //if none are checked unhide all
-                            console.log("all unchecked");
-                        }
+                        //check which ones are checked
+                        clsChecked = new Array();
+                        clsChecked = checkwhicharechecked();
+                        //hide all tables
+                        document.querySelectorAll('table').forEach(function(tbls){
+                            tbls.style.display = 'none';
+                        });
+                        //reveal checked ones
+                        document.querySelectorAll("."+clsChecked.join('.')).forEach(function(tblChecked){
+                            tblChecked.style.display = 'block';
+                        });
                     }
                 })
             });     
             function checkwhicharechecked(){
-                var idsArr = new Array();
+                var clsArr = new Array();
                 var checkboxes = document.querySelectorAll("input[type=checkbox]");
                 checkboxes.forEach(function(checkbox) {
                     if (checkbox.checked) {
-                        idsArr.push(checkbox.id);
+                        clsArr.push(checkbox.id);
                     }
                 })
-                return idsArr;                
+                return clsArr;                
             }
             function checkifallunchecked(){
                 var response = true;
@@ -100,7 +131,7 @@
                     }
                 })
                 return response;
-            }   
+            }     
         </script>
     {% else %}
         <tr>
