@@ -1,12 +1,16 @@
 {% load humanize %}
+{% load formatit %}
 
-<table>
+<table style="border: 2px solid black;">
+    <tr>
+        <th colspan=6>Company: {{company_name}} ({{ticker}})</th>
+    </tr>
     <tr>
         <th>PE (<20)</th>
         <td>{{Pe}}</td>
         <td>{% if is_pe_acceptable %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}           
         <th>Shares Outstanding Reduced</th>
-        <td>{{shares_outstanding|intcomma}}</td>
+        <td>Current: {{shares_outstanding|intcomma}} 4 years ago: {{earliest_shares_outstanding|intcomma}}</td>
         <td>{% if are_shares_outstanding_shrinking %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}           
     </tr>
     <tr>
@@ -14,25 +18,30 @@
         <td>{{profit_margin}}</td>
         <td>{% if is_profit_margin_acceptable %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}</td>
         <th>Quick Ratio</th>
-        <td></td>
+        <td>{{quick_ratio|to_percent:0}}</td>
         <td>{% if is_quick_ratio_positive %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}        
     </tr>
     <tr>
         <th>Revenue Growth (4 years)</th>
-        <td></td>
+        <td>Current: {{latest_revenue|intcomma}} 4 years ago: {{earliest_revenue|intcomma}}</td>
         <td>{% if is_revenue_growing %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}           
         <th>Free Cash Flow</th>
-        <td>${{average_cash_flow|intcomma}}</td>    
+        <td>
+            Current: {{latest_free_cash_flow|intcomma}} 
+            4 years ago: {{earliest_free_cash_flow|intcomma}} 
+            <br /> 
+            4 year avg: {{average_cash_flow|intcomma}}                    
+        </td>    
         <td>{% if is_cash_flow_growing %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}               
     </tr>
     <tr>
         <th>Profit Growth (4 years)</th>
-        <td></td>        
+        <td>Current: {{latest_net_income|intcomma}} 4 years ago: {{earliest_net_income|intcomma}}</td>        
         <td>{% if is_net_income_growing %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}           
-        <th>Free Cash Flow worth Market Cap</th>
-        <td>FCF: ${{cash_flow_value|intcomma}} vs Market Cap: ${{market_cap|intcomma}}</td>     
+        <th>4 year Average Free Cash Flow * 20 <br />compared to Market Cap</th>
+        <td>AFCF Value: {{cash_flow_value|intcomma}} <br /> vs Market Cap: {{market_cap|intcomma}}</td>     
         <td>{% if is_market_price_worth %}<i class="material-icons dp48">check_circle</i>{% else %}<i class="material-icons dp48">clear</i>{% endif %}                
-    </tr>            
+    </tr>  
 </table>
 
 <p>8 PILLAR ANALYSIS TABLE</p>
