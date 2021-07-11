@@ -59,7 +59,7 @@ def get_the_pillars(request):
     data = {}
     status = 200
     if request.method == 'GET':
-        tickerSymbol = request.GET.get('tickerSymbol')
+        tickerSymbol = request.GET.get('tickerSymbol').upper()
         quoteTbl = si.get_quote_table(tickerSymbol)
         income_statement = si.get_income_statement(tickerSymbol)
         balance_sheet = si.get_balance_sheet(tickerSymbol)
