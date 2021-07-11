@@ -17,8 +17,10 @@
             <p><label for="afcfck"><input type="checkbox" id="afcfck" class="filled-in" style="display:none;" /><span class="blue-text text-darken-2">AFCFV VS MARKET CAP</span></label>
             </fieldset>
         </div>
+        <div id="countdiv">
+        </div>
         {% for obj in eightpillardata %}
-            <table style="border: 2px solid black;" 
+            <table style="border: 2px solid black; display:block;" 
                 class="
                     {% if obj.is_pe_acceptable %}
                     peck 
@@ -47,7 +49,7 @@
                 "
             >
                 <tr>
-                    <th colspan=6>Company: {{obj.company_name}} ({{obj.ticker}}) <i style="font-size: 10px;">last updated: {{obj.last_updated}}</i></th>
+                    <th colspan=6><a href="https://www.tradingview.com/symbols/NYSE-{{obj.ticker}}"/>Company: {{obj.company_name}} ({{obj.ticker}}) <i style="font-size: 10px;">last updated: {{obj.last_updated}}</i></a></th>
                 </tr>
                 <tr>
                     <th>PE (<20)</th>
@@ -89,6 +91,9 @@
             </table>
         {% endfor %}
         <script>
+            $(document).ready(function(){
+                $("#countdiv").html("Results: "+countResults());
+            })
             var checkboxes = document.querySelectorAll("input[type=checkbox]");
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
@@ -96,7 +101,8 @@
                         //if none are checked unhide all
                         document.querySelectorAll('table').forEach(function(tbls){
                             tbls.style.display = 'block';
-                        });                    
+                        });      
+                        $("#countdiv").html("Results: "+countResults());
                     } else {
                         //check which ones are checked
                         clsChecked = new Array();
@@ -109,6 +115,7 @@
                         document.querySelectorAll("."+clsChecked.join('.')).forEach(function(tblChecked){
                             tblChecked.style.display = 'block';
                         });
+                        $("#countdiv").html("Results: "+countResults());
                     }
                 })
             });     
@@ -132,6 +139,15 @@
                 })
                 return response;
             }     
+            function countResults(){
+                var i=0;
+                document.querySelectorAll('table').forEach(function(val){
+                    if(val.style.display=='block'){
+                        i = i+1;
+                    }
+                })
+                return i;
+            }
         </script>
     {% else %}
         <tr>
