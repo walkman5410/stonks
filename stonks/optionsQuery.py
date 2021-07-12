@@ -28,7 +28,7 @@ for i, tickerSymbol in enumerate(tickerList):
         acceptablePrice = tickerSymbol['cash_flow_value'] / tickerSymbol['shares_outstanding']
 
         putsList['putsReturn'] = putsList['Last Price'] / putsList['Strike']
-        reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .12)]
+        reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .12) & (putsList['Ask'] > 0) & (pd.to_datetime(putsList['Last Trade Date']) > pd.Timestamp('now').floor('D') + pd.Timedelta(-8, unit='D'))]
         if i == 0:
                 finalList = reslt
         if not reslt.empty:
