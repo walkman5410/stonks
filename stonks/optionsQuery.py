@@ -1,9 +1,5 @@
 from yahoo_fin import options
 import pandas as pd
-import numpy as np
-import json
-import requests
-from lxml import etree
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "stonks.settings") 
 from django.core.wsgi import get_wsgi_application
@@ -21,23 +17,18 @@ tickerList = EightPillarData.objects.filter(
     is_dividend_yield_affordable = True,
     is_market_price_worth = False,
     last_updated__gte = timezone.now() - timezone.timedelta(days=10)        
-).values('ticker')
+).values('ticker', 'cash_flow_value', 'shares_outstanding')
 for i, tickerSymbol in enumerate(tickerList):
     try:
-        site = 'https://finance.yahoo.com/quote/'+tickerSymbol['ticker']+'/balance-sheet?p='+tickerSymbol['ticker']
-        headers = {'User-agent': 'Mozilla/5.0'}
-        html = requests.get(url=site, headers=headers).text
-        json_str = html.split('root.App.main =')[1].split('(this)')[0].split(';\n}')[0].strip()
-        json_data = json.loads(json_str)  
-
         #get the options from a specific ticker
         expiration_date = 'January 21, 2022'
         putsList = options.get_puts(tickerSymbol['ticker'], expiration_date)
         
         #get current price
-        currPrice = json_data['context']['dispatcher']['stores']['QuoteSummaryStore']['price']['regularMarketPrice']['raw']
+        acceptablePrice = tickerSymbol['cash_flow_value'] / tickerSymbol['shares_outstanding']
+
         putsList['putsReturn'] = putsList['Last Price'] / putsList['Strike']
-        reslt = putsList[(putsList['Strike'] < currPrice) & (putsList['putsReturn'] > .12)]
+        reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .12)]
         if i == 0:
                 finalList = reslt
         if not reslt.empty:
@@ -46,6 +37,8 @@ for i, tickerSymbol in enumerate(tickerList):
             print('found another 1')
         else:
             print('Empty')
+
     except Exception as e:
         print(e)
-finalList.to_csv('putsWith12PercReturn.csv')
+
+finalList.to_csv('putsWith12PercReturn.csv')        
