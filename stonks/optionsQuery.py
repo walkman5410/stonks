@@ -43,8 +43,9 @@ for i, tickerSymbol in enumerate(tickerList):
         if not reslt.empty:
             frames = [finalList, reslt]
             finalList = pd.concat(frames)
-            print(finalList)
+            print('found another 1')
         else:
             print('Empty')
     except Exception as e:
         print(e)
+finalList.to_csv('putsWith12PercReturn.csv')
