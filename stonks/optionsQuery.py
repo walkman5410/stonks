@@ -29,7 +29,7 @@ for tickerSymbol in tickerList:
         acceptablePrice = tickerSymbol['cash_flow_value'] / tickerSymbol['shares_outstanding']
 
         putsList['putsReturn'] = putsList['Last Price'] / putsList['Strike']
-        reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .08) & (putsList['Ask'] > 0) & (pd.to_datetime(putsList['Last Trade Date']) > pd.Timestamp('now').floor('D') + pd.Timedelta(-8, unit='D'))]
+        reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .06) & (putsList['Ask'] > 0) & (pd.to_datetime(putsList['Last Trade Date']) > pd.Timestamp('now').floor('D') + pd.Timedelta(-8, unit='D'))]
 
         if not reslt.empty:
             frames = [finalList, reslt]
