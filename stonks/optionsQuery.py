@@ -18,7 +18,8 @@ tickerList = EightPillarData.objects.filter(
     is_market_price_worth = False,
     last_updated__gte = timezone.now() - timezone.timedelta(days=10)        
 ).values('ticker', 'cash_flow_value', 'shares_outstanding')
-for i, tickerSymbol in enumerate(tickerList):
+finalList = pd.DataFrame()
+for tickerSymbol in tickerList:
     try:
         #get the options from a specific ticker
         expiration_date = 'January 21, 2022'
@@ -29,8 +30,7 @@ for i, tickerSymbol in enumerate(tickerList):
 
         putsList['putsReturn'] = putsList['Last Price'] / putsList['Strike']
         reslt = putsList[(putsList['Strike'] < acceptablePrice) & (putsList['putsReturn'] > .08) & (putsList['Ask'] > 0) & (pd.to_datetime(putsList['Last Trade Date']) > pd.Timestamp('now').floor('D') + pd.Timedelta(-8, unit='D'))]
-        if i == 0:
-                finalList = reslt
+
         if not reslt.empty:
             frames = [finalList, reslt]
             finalList = pd.concat(frames)
