@@ -39,6 +39,6 @@ for i, tickerSymbol in enumerate(tickerList):
             print('Empty')
 
     except Exception as e:
-        print(e)
+        print("Error: ",e)
 
 finalList.to_csv('putsWith12PercReturn.csv')        
